@@ -9,7 +9,7 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 type UnitTest() =
 
     [<TestMethod>]
-    member __.ClausalNormalForm() =
+    member _.ClausalNormalForm() =
 
         let parser = Parser.makeParser Array.empty
 
@@ -25,32 +25,32 @@ type UnitTest() =
                         |> Seq.map Literal.toString
                         |> Seq.toArray)
                 |> Seq.toArray
-        Assert.AreEqual(2, clauses.Length)
-        Assert.AreEqual(2, clauses.[0].Length)
+        Assert.AreEqual<int>(2, clauses.Length)
+        Assert.AreEqual<int>(2, clauses.[0].Length)
         let groups00 =
             Regex
                 .Match(
                     clauses.[0].[0],
                     "Animal\(skolem(\d+)\(x\)\)")
                 .Groups
-        Assert.AreEqual(2, groups00.Count)
+        Assert.AreEqual<int>(2, groups00.Count)
         let groups01 =
             Regex
                 .Match(
                     clauses.[0].[1],
                     "Loves\(skolem(\d+)\(x\), x\)")
                 .Groups
-        Assert.AreEqual(2, groups01.Count)
+        Assert.AreEqual<int>(2, groups01.Count)
         Assert.AreNotEqual(groups00.[1].Value, groups01.[1].Value)
-        Assert.AreEqual(clauses.[0].[1], clauses.[1].[1])
+        Assert.AreEqual<string>(clauses.[0].[1], clauses.[1].[1])
         let groups11 =
             Regex
                 .Match(
                     clauses.[1].[0],
                     "~Loves\(x, skolem(\d+)\(x\)\)")
                 .Groups
-        Assert.AreEqual(2, groups11.Count)
-        Assert.AreEqual(groups00.[1].Value, groups11.[1].Value)
+        Assert.AreEqual<int>(2, groups11.Count)
+        Assert.AreEqual<string>(groups00.[1].Value, groups11.[1].Value)
 
         let inputs =
             [
@@ -84,7 +84,7 @@ type UnitTest() =
                 printfn "%s" <| String.Join(" | ", clause)
 
     [<TestMethod>]
-    member __.Deconflict() =
+    member _.Deconflict() =
         let parser = Parser.makeParser ["0"]
         let clause1 =
             "((=(x', y) | =(x', y')) | =(0, s(y')))"
@@ -102,10 +102,10 @@ type UnitTest() =
             printfn ""
             printfn "%A" resolvent
             printfn "   %A" subst
-        Assert.AreEqual(9, pairs.Length)
+        Assert.AreEqual<int>(9, pairs.Length)
 
     [<TestMethod>]
-    member __.Unification() =
+    member _.Unification() =
         let parseTerm, parseFormula = Parser.makeParsers [ "a"; "b" ]
         let inputs =
             [
@@ -145,7 +145,7 @@ type UnitTest() =
             Assert.AreEqual(expected, actual)
 
     [<TestMethod>]
-    member __.Resolve1() =
+    member _.Resolve1() =
         let parser = Parser.makeParser Array.empty
         let premises =
             [|
@@ -157,11 +157,11 @@ type UnitTest() =
         printfn "%A" proofOpt
         match proofOpt with
             | Some proof ->
-                Assert.AreEqual(2, (proof.Derivation.Object :?> LinearResolutionDerivation).Steps.Length)
+                Assert.AreEqual<int>(2, (proof.Derivation.Object :?> LinearResolutionDerivation).Steps.Length)
             | _ -> Assert.Fail()
 
     [<TestMethod>]
-    member __.Resolve2() =
+    member _.Resolve2() =
         let parser = Parser.makeParser ["harry"; "ralph"]
         let premises =
             [|
@@ -177,12 +177,12 @@ type UnitTest() =
         printfn "%A" proofOpt
         match proofOpt with
             | Some proof ->
-                Assert.AreEqual(7, (proof.Derivation.Object :?> LinearResolutionDerivation).Steps.Length)
+                Assert.AreEqual<int>(7, (proof.Derivation.Object :?> LinearResolutionDerivation).Steps.Length)
             | _ -> Assert.Fail()
 
     [<TestMethod>]
     /// https://pdfs.semanticscholar.org/58e9/db343f70a3d2342a73c4376ce33e4252166d.pdf
-    member __.Resolve3() =
+    member _.Resolve3() =
         let parser = Parser.makeParser Array.empty
         let goals =
             [|
@@ -200,7 +200,7 @@ type UnitTest() =
     /// This test requires factoring.
     (*
     [<TestMethod>]
-    member __.Factoring() =
+    member _.Factoring() =
         let parser = Parser.makeParser Array.empty
         let goalClauses =
             [|
@@ -227,7 +227,7 @@ type UnitTest() =
     *)
 
     [<TestMethod>]
-    member __.Induction1() =
+    member _.Induction1() =
         let language =
             Language.create
                 [| Constant.create "a" |]
@@ -256,7 +256,7 @@ type UnitTest() =
             | _ -> Assert.Fail()
 
     [<TestMethod>]
-    member __.Induction2() =
+    member _.Induction2() =
 
         let theory =
             {
@@ -300,7 +300,7 @@ type UnitTest() =
 [<TestClass>]
 type Peano() =
 
-    member __.Test(goalStr, ?flagOpt, ?premiseStrsOpt) =
+    member _.Test(goalStr, ?flagOpt, ?premiseStrsOpt) =
         let flag = defaultArg flagOpt true
         let premiseStrs = defaultArg premiseStrsOpt Seq.empty
         let parse = Language.parse Peano.language
@@ -313,7 +313,7 @@ type Peano() =
                 |> System.tryProve Peano.theory premises
         printfn "%A" proofOpt
         match proofOpt with
-            | Some proof -> Assert.AreEqual(flag, proof.Result)
+            | Some proof -> Assert.AreEqual<bool>(flag, proof.Result)
             | _ -> Assert.Fail()
 
     [<TestMethod>]

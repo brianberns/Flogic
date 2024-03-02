@@ -6,12 +6,12 @@ open System
 module List =
 
     type ListBuilder() =
-        member __.Bind(lst, f) = List.collect f lst
-        member __.Return(x) = [x]
-        member __.ReturnFrom(x) = x
-        member __.Zero() = []
-        member __.Combine(a, b) = a @ b
-        member __.Delay(f) = f ()
+        member _.Bind(lst, f) = List.collect f lst
+        member _.Return(x) = [x]
+        member _.ReturnFrom(x) = x
+        member _.Zero() = []
+        member _.Combine(a, b) = a @ b
+        member _.Delay(f) = f ()
 
     let list = ListBuilder()
 
@@ -72,10 +72,10 @@ module List =
 
 /// https://stackoverflow.com/questions/7818277/is-there-a-standard-option-workflow-in-f
 type OptionBuilder() =
-    member __.Bind(v, f) = Option.bind f v
-    member __.Return(v) = Some v
-    member __.ReturnFrom(o) = o
-    member __.Zero() = None
+    member _.Bind(v, f) = Option.bind f v
+    member _.Return(v) = Some v
+    member _.ReturnFrom(o) = o
+    member _.Zero() = None
 
 [<AutoOpen>]
 module OptionAutoOpen =
